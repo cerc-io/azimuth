@@ -1,7 +1,7 @@
 //  the azimuth data store
 //  https://azimuth.network
 
-pragma solidity 0.4.24;
+pragma solidity ^0.5.0;
 
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
@@ -308,7 +308,7 @@ contract Azimuth is Ownable
   //    work with two-dimensional arrays yet, we pass in the three
   //    domains as individual strings.
   //
-  function setDnsDomains(string _primary, string _secondary, string _tertiary)
+  function setDnsDomains(string memory _primary, string memory _secondary, string memory _tertiary)
     onlyOwner
     public
   {
@@ -411,7 +411,7 @@ contract Azimuth is Ownable
     function getSpawned(uint32 _point)
       view
       external
-      returns (uint32[] spawned)
+      returns (uint32[] memory spawned)
     {
       return points[_point].spawned;
     }
@@ -469,7 +469,7 @@ contract Azimuth is Ownable
     function getSponsoring(uint32 _sponsor)
       view
       external
-      returns (uint32[] sponsees)
+      returns (uint32[] memory sponsees)
     {
       return sponsoring[_sponsor];
     }
@@ -531,7 +531,7 @@ contract Azimuth is Ownable
     function getEscapeRequests(uint32 _sponsor)
       view
       external
-      returns (uint32[] requests)
+      returns (uint32[] memory requests)
     {
       return escapeRequests[_sponsor];
     }
@@ -876,7 +876,7 @@ contract Azimuth is Ownable
     function getOwnedPoints(address _whose)
       view
       external
-      returns (uint32[] ownedPoints)
+      returns (uint32[] memory ownedPoints)
     {
       return pointsOwnedBy[_whose];
     }
@@ -924,7 +924,7 @@ contract Azimuth is Ownable
       returns (bool result)
     {
       Deed storage deed = rights[_point];
-      return ( (0x0 != _who) &&
+      return ( (address(0x0) != _who) &&
                ( (_who == deed.owner) ||
                  (_who == deed.managementProxy) ) );
     }
@@ -947,7 +947,7 @@ contract Azimuth is Ownable
     function getManagerFor(address _proxy)
       view
       external
-      returns (uint32[] mfor)
+      returns (uint32[] memory mfor)
     {
       return managerFor[_proxy];
     }
@@ -982,7 +982,7 @@ contract Azimuth is Ownable
       returns (bool result)
     {
       Deed storage deed = rights[_point];
-      return ( (0x0 != _who) &&
+      return ( (address(0x0) != _who) &&
                ( (_who == deed.owner) ||
                  (_who == deed.spawnProxy) ) );
     }
@@ -1006,7 +1006,7 @@ contract Azimuth is Ownable
     function getSpawningFor(address _proxy)
       view
       external
-      returns (uint32[] sfor)
+      returns (uint32[] memory sfor)
     {
       return spawningFor[_proxy];
     }
@@ -1042,7 +1042,7 @@ contract Azimuth is Ownable
       returns (bool result)
     {
       Deed storage deed = rights[_point];
-      return ( (0x0 != _who) &&
+      return ( (address(0x0) != _who) &&
                ( (_who == deed.owner) ||
                  (_who == deed.votingProxy) ) );
     }
@@ -1065,7 +1065,7 @@ contract Azimuth is Ownable
     function getVotingFor(address _proxy)
       view
       external
-      returns (uint32[] vfor)
+      returns (uint32[] memory vfor)
     {
       return votingFor[_proxy];
     }
@@ -1101,7 +1101,7 @@ contract Azimuth is Ownable
       returns (bool result)
     {
       Deed storage deed = rights[_point];
-      return ( (0x0 != _who) &&
+      return ( (address(0x0) != _who) &&
                ( (_who == deed.owner) ||
                  (_who == deed.transferProxy) ||
                  operators[deed.owner][_who] ) );
@@ -1126,7 +1126,7 @@ contract Azimuth is Ownable
     function getTransferringFor(address _proxy)
       view
       external
-      returns (uint32[] tfor)
+      returns (uint32[] memory tfor)
     {
       return transferringFor[_proxy];
     }
@@ -1160,7 +1160,7 @@ contract Azimuth is Ownable
     {
       //  prevent burning of points by making zero the owner
       //
-      require(0x0 != _owner);
+      require(address(0x0) != _owner);
 
       //  prev: previous owner, if any
       //
@@ -1175,7 +1175,7 @@ contract Azimuth is Ownable
       //  keep the list of owned points gapless.  delete this point from the
       //  list, then fill that gap with the list tail.
       //
-      if (0x0 != prev)
+      if (address(0x0) != prev)
       {
         //  i: current index in previous owner's list of owned points
         //
@@ -1227,7 +1227,7 @@ contract Azimuth is Ownable
       //  to keep the reverse lookup gapless.  delete the point from the
       //  old manager's list, then fill that gap with the list tail.
       //
-      if (0x0 != prev)
+      if (address(0x0) != prev)
       {
         //  i: current index in previous manager's list of managed points
         //
@@ -1254,7 +1254,7 @@ contract Azimuth is Ownable
         managerForIndexes[prev][_point] = 0;
       }
 
-      if (0x0 != _proxy)
+      if (address(0x0) != _proxy)
       {
         uint32[] storage mfor = managerFor[_proxy];
         mfor.push(_point);
@@ -1282,7 +1282,7 @@ contract Azimuth is Ownable
       //  gymnastics to keep the reverse lookup gapless.  delete the point
       //  from the old proxy's list, then fill that gap with the list tail.
       //
-      if (0x0 != prev)
+      if (address(0x0) != prev)
       {
         //  i: current index in previous proxy's list of spawning points
         //
@@ -1309,7 +1309,7 @@ contract Azimuth is Ownable
         spawningForIndexes[prev][_point] = 0;
       }
 
-      if (0x0 != _proxy)
+      if (address(0x0) != _proxy)
       {
         uint32[] storage sfor = spawningFor[_proxy];
         sfor.push(_point);
@@ -1337,7 +1337,7 @@ contract Azimuth is Ownable
       //  to keep the reverse lookup gapless.  delete the point from the
       //  old voter's list, then fill that gap with the list tail.
       //
-      if (0x0 != prev)
+      if (address(0x0) != prev)
       {
         //  i: current index in previous voter's list of points it was
         //     voting for
@@ -1365,7 +1365,7 @@ contract Azimuth is Ownable
         votingForIndexes[prev][_point] = 0;
       }
 
-      if (0x0 != _proxy)
+      if (address(0x0) != _proxy)
       {
         uint32[] storage vfor = votingFor[_proxy];
         vfor.push(_point);
@@ -1393,7 +1393,7 @@ contract Azimuth is Ownable
       //  gymnastics to keep the reverse lookup gapless.  delete the point
       //  from the old proxy's list, then fill that gap with the list tail.
       //
-      if (0x0 != prev)
+      if (address(0x0) != prev)
       {
         //  i: current index in previous proxy's list of transferable points
         //
@@ -1420,7 +1420,7 @@ contract Azimuth is Ownable
         transferringForIndexes[prev][_point] = 0;
       }
 
-      if (0x0 != _proxy)
+      if (address(0x0) != _proxy)
       {
         uint32[] storage tfor = transferringFor[_proxy];
         tfor.push(_point);
